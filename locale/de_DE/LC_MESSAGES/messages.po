@@ -1,0 +1,673 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: emoncms3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-29 17:54+0100\n"
+"PO-Revision-Date: 2017-01-29 17:55+0100\n"
+"Last-Translator: Frank Dille\n"
+"Language-Team: @sumpfing <anne@sumpfing.de>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ../../..\n"
+
+#: ../../../Views/device_api.php:6
+msgid "Device API"
+msgstr "Geräte API"
+
+#: ../../../Views/device_api.php:7
+msgid "Apikey authentication"
+msgstr "Apikey Authentisierung"
+
+#: ../../../Views/device_api.php:8
+msgid ""
+"If you want to call any of the following actions when your not logged in you "
+"have this options to authenticate with the API key:"
+msgstr ""
+"Wenn Sie die folgenden Aktionen ohne vorherige Anmeldung ausführen, muss der "
+"API Key hinzugefügt werden:"
+
+#: ../../../Views/device_api.php:9
+msgid "Append on the URL of your request: &apikey=APIKEY"
+msgstr "Der URL hinzufügen: &apikey=APIKEY"
+
+#: ../../../Views/device_api.php:10
+msgid "Use POST parameter: \"apikey=APIKEY\""
+msgstr "POST Parameter: \"apikey=APIKEY\""
+
+#: ../../../Views/device_api.php:11
+msgid "Add the HTTP header: \"Authorization: Bearer APIKEY\""
+msgstr "HTTP Header: \"Authorization: Bearer APIKEY\""
+
+#: ../../../Views/device_api.php:12
+msgid "Read only:"
+msgstr "Lesen:"
+
+#: ../../../Views/device_api.php:15
+msgid "Read & Write:"
+msgstr "Lesen und Schreiben"
+
+#: ../../../Views/device_api.php:19
+msgid "Devicekey authentication"
+msgstr "Device-Key Authorisierung"
+
+#: ../../../Views/device_api.php:20
+msgid ""
+"Using a device key will only allow sending data for the Node of that device, "
+"giving a greater level of security."
+msgstr ""
+"Das Benutzen eines Device-Key erlaubt das Senden von Daten nur für dieses "
+"eine Gerät und verschafft eine höhere Sicherheit beim Zugriff."
+
+#: ../../../Views/device_api.php:21
+msgid ""
+"The input module can use a devicekey instead of an apikey. If you want to "
+"authenticate as a device, just replace apikey=APIKEY with "
+"devicekey=DEVICEKEY:"
+msgstr ""
+"Das Input Modul kann spezielle Device-Key statt eines allgemeinen Api-Key "
+"verwenden. Um einzelne Geräte zu authentizieren muss apikey=APIKEY mit "
+"devicekey=DEVICEKEY ersetzt werden. "
+
+#: ../../../Views/device_api.php:22
+msgid "Append on the input URL of your request: &devicekey=DEVICEKEY"
+msgstr "Beim Request der Input URL hinzufügen: &devicekey=DEVICEKEY "
+
+#: ../../../Views/device_api.php:23
+msgid "Use POST parameter while calling input: \"devicekey=DEVICEKEY\""
+msgstr "POST Parameter beim Aufruf eines Input: \"devicekey=DEVICEKEY\""
+
+#: ../../../Views/device_api.php:24
+msgid ""
+"Ensure that the sent input Node matches the Node that is configured for the "
+"device on the device menu."
+msgstr ""
+"Stellen Sie beim Versenden von Input-Daten sicher, dass ein Node angegeben "
+"ist. Der Node wird in der Geräteliste konfiguriert."
+
+#: ../../../Views/device_api.php:26
+msgid "Available HTML URLs"
+msgstr "Verfügbare HTML URLs"
+
+#: ../../../Views/device_api.php:28
+msgid "The device list view"
+msgstr "Geräteansicht"
+
+#: ../../../Views/device_api.php:29
+msgid "This page"
+msgstr "Geräte API (aktuelle Seite)"
+
+#: ../../../Views/device_api.php:32
+msgid "Available JSON commands"
+msgstr "JSON Befehle"
+
+#: ../../../Views/device_api.php:33
+msgid "To use the json api the request url needs to include <b>.json</b>"
+msgstr ""
+"Bei der Benutzung der json API muss der URL <b>.json</b> hinzugefügt werden."
+
+#: ../../../Views/device_api.php:35
+msgid "Device actions"
+msgstr "Gerät Aktionen"
+
+#: ../../../Views/device_api.php:37
+msgid "List devices"
+msgstr "Geräte Anzeigen"
+
+#: ../../../Views/device_api.php:38
+msgid "Get device details"
+msgstr "Gerät Details "
+
+#: ../../../Views/device_api.php:39
+msgid "Add a device"
+msgstr "Gerät Hinzufügen"
+
+#: ../../../Views/device_api.php:40 ../../../Views/device_view.php:42
+msgid "Delete device"
+msgstr "Gerät Löschen"
+
+#: ../../../Views/device_api.php:41
+msgid "Update device"
+msgstr "Gerät Aktualisieren"
+
+#: ../../../Views/device_api.php:42
+msgid "List templates"
+msgstr "Vorlagenliste"
+
+#: ../../../Views/device_api.php:43 ../../../Views/device_view.php:63
+msgid "Initialize device"
+msgstr "Geräte Initialisierung"
+
+#: ../../../Views/device_api.php:47
+msgid "Devices templates documentation"
+msgstr "Dokumentation Geräte-Vorlagen"
+
+#: ../../../Views/device_api.php:48
+msgid "Template files are located at <b>'\\Modules\\device\\data\\*.json'</b>"
+msgstr ""
+"Vorlagen Dateien werden abgelegt unter <b>'\\Modules\\device\\data\\*.json'</"
+"b>"
+
+#: ../../../Views/device_api.php:49
+msgid ""
+"Each file defines a device type and provides the default inputs and feeds "
+"configurations for that device."
+msgstr ""
+"Jede Vorlage definiert einen Gerätetyp und stellt die Default-Konfiguration "
+"für Inputs und Feeds für ein Gerät."
+
+#: ../../../Views/device_api.php:50
+msgid ""
+"A device should only need to be initialized once on instalation. Initiating "
+"a device twice will duplicate its default inputs and feeds."
+msgstr ""
+"Ein Gerätetyp bei der Installation muss nur einmal initialisiert werden. "
+"Jede weitere Initalisierung erstellt weitere Inputs und Feeds als Kopie."
+
+#: ../../../Views/device_view.php:22
+msgid "Devices Help"
+msgstr "Geräte Hilfe"
+
+#: ../../../Views/device_view.php:23
+msgid "Devices"
+msgstr "Geräte"
+
+#: ../../../Views/device_view.php:29
+msgid "No devices"
+msgstr "Keine Geräte"
+
+#: ../../../Views/device_view.php:30
+msgid "There are no devices configured. Please add a new device."
+msgstr ""
+"Es sind keine Geräte konfiguriert, Bitte erstellen Sie ein neues Gerät."
+
+#: ../../../Views/device_view.php:35
+msgid "New device"
+msgstr "Neues Gerät"
+
+#: ../../../Views/device_view.php:45
+msgid "Deleting a device is permanent."
+msgstr "Das Löschen eines Gerätes ist endgültig!"
+
+#: ../../../Views/device_view.php:47
+msgid ""
+"If this device is active and is using a device key, it will no longer be "
+"able to post data."
+msgstr ""
+"Warnung: Sollte das Gerät aktiv sein und per <b>Device-Key</b> Daten senden, "
+"wird dies nicht mehr funktionieren."
+
+#: ../../../Views/device_view.php:49
+msgid ""
+"Inputs and Feeds that this device uses are not deleted and all historic data "
+"is kept. To remove them, deleted manualy afterwards."
+msgstr ""
+"Inputs und Feeds die dieses Gerät bereitstellt werden nicht gelöscht. Die "
+"aufzeichgezeichneten Daten bleiben erhalten. Zum Löschen der Daten müssen "
+"Sie die Feeds anschließend manuell löschen."
+
+#: ../../../Views/device_view.php:51
+msgid "Are you sure you want to delete?"
+msgstr "Wirklich löschen?"
+
+#: ../../../Views/device_view.php:55 ../../../Views/device_view.php:77
+msgid "Cancel"
+msgstr "Abbruch"
+
+#: ../../../Views/device_view.php:56
+msgid "Delete permanently"
+msgstr "Dauerhaft löschen"
+
+#: ../../../Views/device_view.php:66
+msgid "Default inputs and associated feeds will be automaticaly created."
+msgstr "Es werden jetzt die Default Inputs und Feeds automatisch erstellt."
+
+#: ../../../Views/device_view.php:68
+msgid ""
+"Make sure the selected device node and type are correcly configured before "
+"proceding."
+msgstr ""
+"Stellen Sie sicher das Gerätetyp und -Node richtig konfiguriert sind, bevor "
+"Sie die fortfahren."
+
+#: ../../../Views/device_view.php:70
+msgid "Initializing a device usualy should only be done once on installation."
+msgstr ""
+"Die Initalisierung eines Gerätes sollte nur einmalig bei der Installation "
+"erfolgen."
+
+#: ../../../Views/device_view.php:72
+msgid ""
+"If the node name already exists, new default inputs and feeds will be added."
+msgstr ""
+"Wenn der Node bereits existiert werden die Inputs und Feed hinzugefügt."
+
+#: ../../../Views/device_view.php:78
+msgid "Initialize"
+msgstr "Initialisieren"
+
+#: ../../../Views/device_view.php:93
+msgid "Name"
+msgstr "Name"
+
+#: ../../../Views/device_view.php:94
+msgid "Location"
+msgstr "Standort"
+
+#: ../../../Views/device_view.php:95
+msgid "Node"
+msgstr "Node"
+
+#: ../../../Views/device_view.php:96
+msgid "Type"
+msgstr "Typ"
+
+#: ../../../Views/device_view.php:97
+msgid "Device access key"
+msgstr "Device-Key"
+
+#: ../../../Views/device_view.php:98
+msgid "Updated"
+msgstr "Geändert"
+
+#: ../../../Views/device_view.php:99
+msgid "tbd"
+msgstr ""
+
+#: ../../../device_menu.php:7
+msgid "Device Setup"
+msgstr "Geräte"
+
+#~ msgid "Dashboard Configuration"
+#~ msgstr "Dashboardkonfiguration"
+
+#~ msgid "Dashboard name: "
+#~ msgstr "Dashboard Name:"
+
+#~ msgid "Alias name: "
+#~ msgstr "Alias Name:"
+
+#~ msgid "Background color: "
+#~ msgstr "Hntergrund Farbe:"
+
+#~ msgid "Description: "
+#~ msgstr "Beschreibung:"
+
+#~ msgid "Grid size: "
+#~ msgstr "Gitter Größe:"
+
+#~ msgid "Make this dashboard the first shown"
+#~ msgstr "Zeige dieses Dashboard als erstes"
+
+#~ msgid "Main"
+#~ msgstr "Haupt"
+
+#~ msgid "Activate this dashboard"
+#~ msgstr "Aktiviere dieses Dashboard"
+
+#~ msgid "Published"
+#~ msgstr "Veröffentlicht"
+
+#~ msgid "Anyone with the URL can see this dashboard"
+#~ msgstr "Jeder mit der URL kann dieses Dashboard sehen"
+
+#~ msgid "Public"
+#~ msgstr "Öffentlich"
+
+#~ msgid ""
+#~ "Shows dashboard description on mouse over dashboard name in menu project"
+#~ msgstr ""
+#~ "Zeigt Dashboardbeschreibung bei Überfahren des Dashboardnamens mit der "
+#~ "Maus"
+
+#~ msgid "Show description"
+#~ msgstr "Beschreibung zeigen"
+
+#~ msgid "Close"
+#~ msgstr "Schliessen"
+
+#~ msgid "Save changes"
+#~ msgstr "Änderungen speichern"
+
+#~ msgid "Configure element"
+#~ msgstr "Element konfigurieren"
+
+#~ msgid "Configure"
+#~ msgstr "Konfigurieren"
+
+#~ msgid "Forward"
+#~ msgstr "in Vordergrund"
+
+#~ msgid "Backward"
+#~ msgstr "in Hintergrund"
+
+#~ msgid "Not modified"
+#~ msgstr "Nicht modifiziert"
+
+#~ msgid "Saved"
+#~ msgstr "Gespeichert"
+
+#~ msgid "Dashboards"
+#~ msgstr "Dashboards"
+
+#~ msgid "No dashboards created"
+#~ msgstr "Kein Dashboard angelegt"
+
+#~ msgid ""
+#~ "Maybe you would like to add your first dashboard using the button bellow."
+#~ msgstr "Um ein erstes Dashboard anzulegen, benutzen diese Schaltfläche."
+
+#~ msgid "New"
+#~ msgstr "Neu"
+
+#~ msgid "Delete dashboard"
+#~ msgstr "Dashboard Löschen"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Alias"
+#~ msgstr "Alias"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"
+
+#~ msgid "Draw Editor"
+#~ msgstr "Editor"
+
+#~ msgid "Configure dashboard"
+#~ msgstr "Kinfiguration Dashboard"
+
+#~ msgid "View mode"
+#~ msgstr "Anzeigemethode"
+
+#~ msgid "Changed, press to save"
+#~ msgstr "geändert, zum Speichern drücken"
+
+#~ msgid "Colour"
+#~ msgstr "Farbe"
+
+#~ msgid "Feed"
+#~ msgstr "Feed"
+
+#~ msgid "Feed value"
+#~ msgstr "Feedwert"
+
+#~ msgid "Graduations"
+#~ msgstr "Abstufungen"
+
+#~ msgid "Max value"
+#~ msgstr "Maximalwert"
+
+#~ msgid "Max value to show"
+#~ msgstr "Maximalwert zum Anzeigen"
+
+#~ msgid "Scale"
+#~ msgstr "Skalierung"
+
+#~ msgid "Units"
+#~ msgstr "Einheit"
+
+#~ msgid ""
+#~ "Feed to set, control with caution, make sure device being controlled can "
+#~ "operate safely in event of emoncms failure."
+#~ msgstr ""
+#~ "Feed to set, control with caution, make sure device being controlled can "
+#~ "operate safely in event of emoncms failure."
+
+#~ msgid "Starting value"
+#~ msgstr "Startwert"
+
+#~ msgid "Value"
+#~ msgstr "Wert"
+
+#~ msgid "IP"
+#~ msgstr "IP"
+
+#~ msgid "Port"
+#~ msgstr "Port"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Confirmation"
+#~ msgstr "Bestätigung"
+
+#~ msgid "IP address of server"
+#~ msgstr "Server IP Adresse"
+
+#~ msgid "Listen port of server"
+#~ msgstr "Server Port"
+
+#~ msgid "URL example: node/param"
+#~ msgstr "URL Beispiel: Node/Parameter"
+
+#~ msgid "Data to send"
+#~ msgstr "Daten zum Senden"
+
+#~ msgid "0=rd, 1=gn, 2=gy, 3=bu, 4=vio, 5=ye, >5=bk"
+#~ msgstr "0=Rot, 1=Grün, 2=Grau, 4=Vio., 5=Gelb, >5 Schwarz"
+
+#~ msgid "Button Text"
+#~ msgstr "Schaltfläche Text"
+
+#~ msgid "Confirmation Box: yes/no"
+#~ msgstr "Bestätigung: Ja / Nein"
+
+#~ msgid "Do you want to continue?"
+#~ msgstr "Wirklich Fortsetzen?"
+
+#~ msgid "Bottom feed value"
+#~ msgstr "Niedrigster Wert"
+
+#~ msgid "Top feed value"
+#~ msgstr "Höchstwert"
+
+#~ msgid "Type to show"
+#~ msgstr "Anzeigetyp"
+
+#~ msgid "Units to show"
+#~ msgstr "Anzeigeeinheit"
+
+#~ msgid "Value is multiplied by scale before display"
+#~ msgstr "Wert wird mit Skalierung multipliziert bevor er angezeigt wird."
+
+#~ msgid "Decimals to show"
+#~ msgstr "Kommast."
+
+#~ msgid "0 = before value, 1 = after value"
+#~ msgstr "0=vor Wert, 1=nach Wert"
+
+#~ msgid "Bottom"
+#~ msgstr "Niedrigster"
+
+#~ msgid "Consumption"
+#~ msgstr "Verbrauch"
+
+#~ msgid "Consumption feed value"
+#~ msgstr "Verbrauchsfeed Wert"
+
+#~ msgid "Currency"
+#~ msgstr "Strom"
+
+#~ msgid "Currency to show"
+#~ msgstr "Strom zum Anzeigen"
+
+#~ msgid "delta"
+#~ msgstr "Delta"
+
+#~ msgid "dp"
+#~ msgstr "Kommast."
+
+#~ msgid "Feed source"
+#~ msgstr "Feed Quelle"
+
+#~ msgid "Fill"
+#~ msgstr "Füllen"
+
+#~ msgid "Fill value"
+#~ msgstr "Füllwert"
+
+#~ msgid "interval"
+#~ msgstr "Intervall"
+
+#~ msgid "kwhd"
+#~ msgstr "kWh/d"
+
+#~ msgid "kwhd source"
+#~ msgstr "kW/h Quelle"
+
+#~ msgid "Kwh price"
+#~ msgstr "kWh Preis"
+
+#~ msgid "Line colour in hex. Blank is use default."
+#~ msgstr "Linienfarbe in Hex. Schwarz ist Voreinstellung."
+
+#~ msgid "Mid"
+#~ msgstr "Mittel"
+
+#~ msgid "Mid value"
+#~ msgstr "Mittelwert"
+
+#~ msgid "Power"
+#~ msgstr "Leistung"
+
+#~ msgid "Power to show"
+#~ msgstr "Leistung zum Anzeigen"
+
+#~ msgid "scale"
+#~ msgstr "Skalierung"
+
+#~ msgid "Scale by"
+#~ msgstr "Skalierung"
+
+#~ msgid "Set kwh price"
+#~ msgstr "kWh Preis eingeben"
+
+#~ msgid "Solar"
+#~ msgstr "Solar"
+
+#~ msgid "Solar feed value"
+#~ msgstr "Solarfeed Wert"
+
+#~ msgid "Threshold A"
+#~ msgstr "Schwelle A"
+
+#~ msgid "Threshold A used"
+#~ msgstr "Schwelle A benutzt"
+
+#~ msgid "Threshold B"
+#~ msgstr "Schwelle B"
+
+#~ msgid "Threshold B used"
+#~ msgstr "Schwelle B benutzt"
+
+#~ msgid "Top"
+#~ msgstr "Höchster"
+
+#~ msgid "Ufac"
+#~ msgstr "Ufac"
+
+#~ msgid "Ufac value"
+#~ msgstr "Ufac Wert"
+
+#~ msgid "units"
+#~ msgstr "Einheit"
+
+#~ msgid " clone"
+#~ msgstr "Kopie erstellen"
+
+#~ msgid "Value to show"
+#~ msgstr "Anzeigewert"
+
+#~ msgid "Menu name: (lowercase a-z only)"
+#~ msgstr "Menüname: (nur Kleinbuchstaben a-z)"
+
+#~ msgid "Logout"
+#~ msgstr "Logout"
+
+#~ msgid "dashboard set"
+#~ msgstr "Dashboard einrichten"
+
+#~ msgid "dashboard set configuration"
+#~ msgstr "Dashboardkonfiguration"
+
+#~ msgid "Main: "
+#~ msgstr "Haupt:"
+
+#~ msgid "Published: "
+#~ msgstr "Veröffentlicht:"
+
+#~ msgid "Public: "
+#~ msgstr "Öffentlich:"
+
+#~ msgid "Thumb view"
+#~ msgstr "Thumb anzeigen"
+
+#~ msgid "Actions"
+#~ msgstr "Aktionen"
+
+#~ msgid "Share"
+#~ msgstr "Geteilt"
+
+#~ msgid "This is the main dashboard"
+#~ msgstr "Dies ist das Hauptdashboard"
+
+#~ msgid "Set main dashboard"
+#~ msgstr "Hauptdashboard festlegen"
+
+#~ msgid "Unpublish dashboard"
+#~ msgstr "Dashboard depublizieren"
+
+#~ msgid "Publish dashboard"
+#~ msgstr "Dashboard publizieren"
+
+#~ msgid "Make dashboard private"
+#~ msgstr "Dashboard als privat festlegen"
+
+#~ msgid "Make dashboard public"
+#~ msgstr "Dahsboard als öffentlich festlegen"
+
+#~ msgid "Draw"
+#~ msgstr "Ändern"
+
+#~ msgid "View"
+#~ msgstr "Anzeigen"
+
+#~ msgid "Clone"
+#~ msgstr "Klonen"
+
+#~ msgid "Public share URL"
+#~ msgstr "Öffentliche URLzum Teilen"
+
+#~ msgid "Private share URL"
+#~ msgstr "Private URL zum Teilen"
+
+#~ msgid "Explore Public Dashboards"
+#~ msgstr "Öffentliche Dashboards suchen"
+
+#~ msgid "User"
+#~ msgstr "Benutzer"
+
+#~ msgid "en_EN"
+#~ msgstr "English"
+
+#~ msgid "es_ES"
+#~ msgstr "Spanish"
+
+#~ msgid "nl_BE"
+#~ msgstr "Dutch (Belgium)"
+
+#~ msgid "nl_NL"
+#~ msgstr "Dutch (Netherlands)"
+
+#~ msgid "fr_FR"
+#~ msgstr "French"
+
+#~ msgid "AUTODETECTLANGUAGE"
+#~ msgstr "Use language browser"
