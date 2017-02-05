@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: emoncms3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-29 17:54+0100\n"
-"PO-Revision-Date: 2017-01-29 17:55+0100\n"
+"POT-Creation-Date: 2017-02-05 18:06+0100\n"
+"PO-Revision-Date: 2017-02-05 23:10+0100\n"
 "Last-Translator: Frank Dille\n"
 "Language-Team: @sumpfing <anne@sumpfing.de>\n"
 "Language: de_DE\n"
@@ -140,6 +140,7 @@ msgid "List templates"
 msgstr "Vorlagenliste"
 
 #: ../../../Views/device_api.php:43 ../../../Views/device_view.php:63
+#: ../../../Views/device_view.php:104
 msgid "Initialize device"
 msgstr "Geräte Initialisierung"
 
@@ -176,6 +177,10 @@ msgstr "Geräte Hilfe"
 #: ../../../Views/device_view.php:23
 msgid "Devices"
 msgstr "Geräte"
+
+#: ../../../Views/device_view.php:25
+msgid "loading..."
+msgstr "wird geladen ..."
 
 #: ../../../Views/device_view.php:29
 msgid "No devices"
@@ -278,6 +283,14 @@ msgstr "Geändert"
 #: ../../../Views/device_view.php:99
 msgid "tbd"
 msgstr ""
+
+#: ../../../Views/device_view.php:101
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: ../../../Views/device_view.php:102
+msgid "Delete"
+msgstr "Löschen"
 
 #: ../../../device_menu.php:7
 msgid "Device Setup"
