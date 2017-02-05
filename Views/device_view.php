@@ -22,7 +22,7 @@
     <div id="apihelphead" style="float:right;"><a href="api"><?php echo _('Devices Help'); ?></a></div>
     <div id="localheading"><h2><?php echo _('Devices'); ?></h2></div>
 
-    <div id="table"><div align='center'>loading...</div></div>
+    <div id="table"><div align='center'><?php echo _("loading..."); ?></div></div>
 	
     <div id="nodevices" class="hide">
         <div class="alert alert-block">
@@ -98,10 +98,10 @@
 	'time':{'title':'<?php echo _("Updated"); ?>', 'type':"updated"},
     //'public':{'title':"<?php echo _('tbd'); ?>", 'type':"icon", 'trueicon':"icon-globe", 'falseicon':"icon-lock"},
     // Actions
-    'edit-action':{'title':'', 'type':"edit"},
-    'delete-action':{'title':'', 'type':"delete"},
+    'edit-action':{'title':'', 'type':"edit", 'tooltip':"<?php echo _('Edit'); ?>"},
+    'delete-action':{'title':'', 'type':"delete", 'tooltip':"<?php echo _('Delete'); ?>"},
     //'view-action':{'title':'', 'type':"iconbasic", 'icon':'icon-wrench'},
-    'create-action':{'title':'', 'type':"iconbasic", 'icon':'icon-file'}
+    'create-action':{'title':'', 'type':"iconbasic", 'icon':'icon-file', 'tooltip':"<?php echo _('Initialize device'); ?>"}
   }
 
   update();
@@ -122,9 +122,11 @@
       if (table.data.length != 0) {
         $("#nodevices").hide();
         $("#localheading").show();
+        $("#apihelphead").show();
       } else {
         $("#nodevices").show();
         $("#localheading").hide();
+        $("#apihelphead").hide();
       }
     }});
   }
