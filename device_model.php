@@ -314,6 +314,11 @@ class Device
             }
             $datatype = constant($f->type); // DataType::
             $engine = constant($f->engine); // Engine::
+            if (property_exists($f, "unit")) { // Unit
+                $unit = $f->unit;
+            } else {
+                $unit = "";
+            }
             if (property_exists($f, "interval")) {
                 $options_in[] = array();
                 $options_in['interval'] = $f->interval;
@@ -324,6 +329,10 @@ class Device
             $result = $feed->create($userid,$tag,$name,$datatype,$engine,$options_in);
             if($result["success"] !== true) {
                 return $result;
+            }
+            if (property_exists($f, "unit")) { // Unit
+                $feed->set_feed_fields($result["feedid"], '{"unit":"'.$unit.'"}');
+                $this->log->info("update_feed() unit=$unit");
             }
             $f->feedId = $result["feedid"]; // Assign the created feed id to the feeds array
         }
@@ -339,17 +348,25 @@ class Device
           // Create each input
           $name = $i->name;
           $description = $i->description;
+          if (property_exists($i, "unit")) { // Unit
+            $unit = $i->unit;
+          } else {
+            $unit = "";
+          }
           if(property_exists($i, "node")) {
             $nodeid = $i->node;
           } else {
             $nodeid = $node;
           }
-          $this->log->info("create_inputs() userid=$userid nodeid=$nodeid name=$name description=$description");
+          $this->log->info("create_inputs() userid=$userid nodeid=$nodeid name=$name description=$description unit=$unit");
           $inputId = $input->create_input($userid, $nodeid, $name);
           if(!$input->exists($inputId)) {
               return false;
           }
           $input->set_fields($inputId, '{"description":"'.$description.'"}');
+          if (property_exists($i, "unit")) { // update Unit?
+            $input->set_fields($inputId, '{"unit":"'.$unit.'"}');
+          }
           $i->inputId = $inputId; // Assign the created input id to the inputs array
         }
         return true;
