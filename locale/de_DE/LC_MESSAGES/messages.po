@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: emoncms3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-05 18:06+0100\n"
-"PO-Revision-Date: 2017-02-07 16:15+0100\n"
+"POT-Creation-Date: 2017-02-12 22:35+0100\n"
+"PO-Revision-Date: 2017-02-13 15:36+0100\n"
 "Last-Translator: Frank Dille\n"
 "Language-Team: @sumpfing <anne@sumpfing.de>\n"
 "Language: de_DE\n"
@@ -213,7 +213,7 @@ msgid ""
 "is kept. To remove them, deleted manualy afterwards."
 msgstr ""
 "Inputs und Feeds die dieses Gerät bereitstellt werden nicht gelöscht. Die "
-"aufgezeichneten Daten bleiben erhalten.<br>Zum Löschen der Daten müssen die "
+"aufgezeichneten Daten bleiben erhalten. Zum Löschen der Daten müssen die "
 "Feeds anschließend manuell gelöscht werden."
 
 #: ../../../Views/device_view.php:51
@@ -295,6 +295,10 @@ msgstr "Löschen"
 #: ../../../device_menu.php:7
 msgid "Device Setup"
 msgstr "Geräte"
+
+#: ../../../device_model.php:297
+msgid "Device initialized"
+msgstr "Gerät erfolgreich Initialisiert."
 
 #~ msgid "Dashboard Configuration"
 #~ msgstr "Dashboardkonfiguration"

@@ -294,7 +294,7 @@ class Device
               return array('success'=>false, 'message'=>'Error while creating the feeds process list. ' . $result['message']);
             }
         }
-        return array('success'=>true, 'message'=>'Device initialized');
+        return array('success'=>true, 'message'=>_("Device initialized"));
     }
 
     // Create the feeds
