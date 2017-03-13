@@ -270,7 +270,7 @@ class Device
         return $list;
     }
 
-    public function init_template($id)
+    public function init_template($id, $inputs)
     {
         $id = (int) $id;
         if (!$this->exist($id)) return array('success'=>false, 'message'=>'Device does not exist');
@@ -288,29 +288,40 @@ class Device
 
             $userid = $row['userid'];
             $node = $row['nodeid'];
-            $feeds = $template->feeds;
-            $inputs = $template->inputs;
-
+            $usedInputs;
+            $inputTemplates = $template->inputs;
+            foreach (inputTemplates as $value) {
+              if( in_array($value->name, $inputs)){
+                $usedInputs[] = $value;
+              }
+            }
+            $feedTemplates = $template->feeds;
+            $usedFeeds;
+            foreach($feedTemplates as $value){
+              if(in_array($value->name, $inputs)){
+                $usedFeeds[] = $value;
+              }
+            }
             // Create feeds
-            $result = $this->create_feeds($userid, $node, $feeds);
+            $result = $this->create_feeds($userid, $node, $usedFeeds);
             if ($result["success"] !== true) {
               return array('success'=>false, 'message'=>'Error while creating the feeds. ' . $result['message']);
             }
 
             // Create inputs
-            $result = $this->create_inputs($userid, $node, $inputs);
+            $result = $this->create_inputs($userid, $node, $usedInputs);
             if ($result !== true) {
               return array('success'=>false, 'message'=>'Error while creating the inputs.');
             }
 
             // Create inputs processes
-            $result = $this->create_inputs_processes($feeds, $inputs);
+            $result = $this->create_inputs_processes($usedFeeds, $usedInputs);
             if ($result["success"] !== true) {
               return array('success'=>false, 'message'=>'Error while creating the inputs process list. ' . $result['message']);
             }
             
             // Create feeds processes
-            $result = $this->create_feeds_processes($feeds, $inputs);
+            $result = $this->create_feeds_processes($usedFeeds, $usedInputs);
             if ($result["success"] !== true) {
               return array('success'=>false, 'message'=>'Error while creating the feeds process list. ' . $result['message']);
             }

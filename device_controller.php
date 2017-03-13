@@ -42,7 +42,11 @@ function device_controller()
                     if ($route->action == "get") $result = $deviceget;
                     if ($route->action == "delete") $result = $device->delete($deviceid);
                     if ($route->action == 'set') $result = $device->set_fields($deviceid, get('fields'));
-                    if ($route->action == 'inittemplate') $result = $device->init_template($deviceid);
+                    if ($route->action == 'inittemplate'){
+                      $inputsString = get('inputs');
+                      $inputs = explode(',', $inputsString);
+                      $result = $device->init_template($deviceid, $inputs);
+                    }
                 }
             }
             else

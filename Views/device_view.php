@@ -17,6 +17,8 @@
 <script type="text/javascript" src="<?php echo $path; ?>Lib/tablejs/table.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Lib/tablejs/custom-table-fields.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Lib/misc/properties_visualizer.js"></script>
+<script type="text/javascript" src="<?php echo $path; ?>Lib/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="<?php echo $path; ?>Lib/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css"/>
 
 <style>
 #table input[type="text"] {
@@ -78,17 +80,19 @@
            <?php echo _('If the node name already exists, new default inputs and feeds will be added.'); ?>
 		   <br><br>
         </p><br>
-            <div id="deviceSettings">
-          
-            </div><br>
             <div id="deviceInputs">
-              
+                <label for="inputSelection"><?php echo _('Inputs'); ?></label>
+                <select id="inputSelection" multiple="multiple"></select>  
+            </div><br>
+            <div id="deviceSettings">
+                <label style="font-style: bold;"><?php echo _('Settings');?></label>
+                <div id="deviceSettingsContent"></div>
             </div>
     </div>
     <div class="modal-footer">
         <button id="canceldevicesettings" class="btn" data-dismiss="modal" aria-hidden="true"><?php echo _('Cancel'); ?></button>
         <button id="savedevicesettings" class="btn btn-primary"><?php echo _('Save Settings'); ?></button>
-        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize'); ?></button>   
+        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize (create inputs and feeds'); ?></button>   
     </div>
 </div>
 
@@ -195,7 +199,9 @@
   });
  
   $("#table").on('click', '.icon-file', function() {
-    $('#deviceSettings').html('');
+    $('#deviceSettingsContent').html('');
+    $('#inputSelection options').remove();
+    var select = $('#inputSelection');
     var type = table.data[$(this).attr('row')]['type'];
     if(type !== ''){
       $.each(devicesTemplates, function(name, element){
@@ -206,7 +212,7 @@
       });
       if(deviceTemplate !== null){
         rowid = $(this).attr('row');
-        var container = $('#deviceSettings');
+        var container = $('#deviceSettingsContent');
 	var props = table.data[rowid]['properties'];
 	if(props === ""){
 	  props = {};
@@ -216,6 +222,14 @@
         if(deviceTemplate.properties){
           var visualizer = new PropertiesVisualizer();
           settingInputs = visualizer.visualize(deviceTemplate.properties, container, props);
+        }
+        if(deviceTemplate.inputs){
+          $.each(deviceTemplate.inputs, function(index, element){
+            var opt = $("<option></option>");
+            opt.val(element.name).text(element.name);
+            select.append(opt);
+          });
+          select.multiselect({nonSelectedText: '<?php echo _('No input selected');?>', selectAllValue:'select-all-value', selectAllText:'<?php echo _('Select all');?>', includeSelectAllOption: true});
         }
         $('#initdeviceModal').modal('show');
         $('#initdeviceModal').attr('deviceid',table.data[$(this).attr('row')]['id']);
@@ -228,10 +242,16 @@
   $("#confirminitdevice").click(function()
   {
     var id = $('#initdeviceModal').attr('deviceid');
-    var result = device.inittemplate(id);
+    var inputsArray = [];
+    $('#inputSelection option:selected').each(function(index, item){
+      if(item.value !== "select-all-value"){
+        inputsArray.push(item.value);
+      }
+    });
+    var inputs = inputsArray.join();
+    var result = device.inittemplate(id, inputs);
     alert(result['message']);
     $('#initdeviceModal').modal('hide');
-    $('#deviceSettings').html('');
   });
   
   $("#savedevicesettings").click(function()
@@ -258,14 +278,10 @@
       device.set(id, data);
     }
     $('#initdeviceModal').modal('hide');
-    $('#deviceSettings').html('');
     var newProps = JSON.stringify(data.properties);
     table.data[rowid]['properties'] = newProps;
   });
   
-  $("#canceldevicesettings").click(function()
-  {
-    $('#deviceSettings').html('');
-  });
+
 
 </script>

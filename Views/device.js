@@ -30,10 +30,10 @@ var device = {
         return result;
     },
 
-    'inittemplate':function(id)
+    'inittemplate':function(id, inputs)
     {
         var result = {};
-        $.ajax({ url: path+"device/inittemplate.json", data: "id="+id, dataType: 'json', async: false, success: function(data) {result = data;} });
+        $.ajax({ url: path+"device/inittemplate.json", data: "id="+id+"&inputs="+inputs, dataType: 'json', async: false, success: function(data) {result = data;} });
         return result;
     }
 }
