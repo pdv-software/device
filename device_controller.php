@@ -15,8 +15,9 @@ function device_controller()
     if ($route->format == 'html')
     {
         if ($route->action == "view" && $session['write']) {
+            $collectorsData = $device->get_active_collectors($session['userid']);
             $devices_templates = $device->get_templates();
-            $result = view("Modules/device/Views/device_view.php",array('devices_templates'=>$devices_templates));
+            $result = view("Modules/device/Views/device_view.php",array('devices_templates'=>$devices_templates, 'collectorsData' => $collectorsData));
         }
         if ($route->action == 'api') $result = view("Modules/device/Views/device_api.php", array());
     }

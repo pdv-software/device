@@ -135,7 +135,7 @@ class Device
         $userid = (int) $userid;
         $devices = array();
 
-        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time` FROM device WHERE userid = '$userid'");
+        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time`, `active`, `collectorid`, (SELECT `name` from collector c where c.id = collectorid) AS collector, `properties` FROM device WHERE userid = $userid");
         while ($row = (array)$result->fetch_object())
         {
             $devices[] = $row;
@@ -146,7 +146,7 @@ class Device
     private function load_to_redis($userid)
     {
         $this->redis->delete("user:device:$userid");
-        $result = $this->mysqli->query("SELECT `id`, `name`, `description`, `type`, `nodeid`, `devicekey` FROM device WHERE userid = '$userid'");
+        $result = $this->mysqli->query("SELECT `id`, `name`, `description`, `type`, `nodeid`, `devicekey`, `active`, `collectorid`, `properties` FROM device WHERE userid = '$userid'");
         while ($row = $result->fetch_object())
         {
             $this->redis->sAdd("user:device:$userid", $row->id);
@@ -156,7 +156,10 @@ class Device
                 'description'=>$row->description,
                 'type'=>$row->type,
                 'nodeid'=>$row->nodeid,
-                'devicekey'=>$row->devicekey
+                'devicekey'=>$row->devicekey,
+                'active'=>$row->active,
+                'collector'=>$row->collector,
+                'properties'=>$row->properties
             ));
         }
     }
@@ -165,7 +168,7 @@ class Device
     {
         $userid = intval($userid);
         $devicekey = md5(uniqid(mt_rand(), true));
-        $this->mysqli->query("INSERT INTO device (`userid`, `name`, `description`, `nodeid`, `devicekey`) VALUES ('$userid','New Device','','New Node','$devicekey')");
+        $this->mysqli->query("INSERT INTO device (`userid`, `name`, `description`, `nodeid`, `devicekey`, `active`, `collectorid`, `properties`) VALUES ('$userid','New Device','','New Node','$devicekey', 1, NULL, '')");
         if ($this->redis) $this->load_to_redis($userid);
         return $this->mysqli->insert_id;
     }
@@ -213,15 +216,33 @@ class Device
             }
             $array[] = "`devicekey` = '".$devicekey."'";
         }
-        if (isset($fields->type)) $array[] = "`type` = '".preg_replace('/[^\/\|\,\w\s-:]/','',$fields->type)."'";
-
+        if (isset($fields->type)){
+            $array[] = "`type` = '".preg_replace('/[^\/\|\,\w\s-:]/','',$fields->type)."'";
+            $array[] = "`properties` = ''";
+        }
+        if (isset($fields->active)){
+            $array[] = "`active` = ".preg_replace('/[^\p{N}]/u','',$fields->active);
+        }
+        if(isset($fields->properties)){
+	    $array[] = "`properties` = '".json_encode($fields->properties)."'";
+	}
+        if(isset($fields->collector)){
+            $collector = $fields->collector;
+            $result = $this->mysqli->query("SELECT `id` from collector WHERE `name` = '$collector'");
+            $row = $result->fetch_array(MYSQLI_NUM);
+            if($row){
+              $collectorid = $row[0];
+              $array[] = "`collectorid` = $collectorid";
+            }
+	    
+	}
         // Convert to a comma seperated string for the mysql query
         $fieldstr = implode(",",$array);
-        $this->mysqli->query("UPDATE device SET ".$fieldstr." WHERE `id` = '$id'");
+        $this->mysqli->query("UPDATE device SET ".$fieldstr." WHERE `id` = $id");
 
         if ($this->mysqli->affected_rows>0){
             if ($this->redis) {
-                $result = $this->mysqli->query("SELECT userid FROM device WHERE id='$id'");
+                $result = $this->mysqli->query("SELECT userid FROM device WHERE id=$id");
                 $row = (array) $result->fetch_object();
                 if (isset($row['userid']) && $row['userid']) {
                     $this->load_to_redis($row['userid']);
@@ -498,6 +519,18 @@ class Device
             }
         }
         return $resultProcesslist;
+    }
+    
+    public function get_active_collectors($userid){
+        $useriId = (int) $userid;
+        $activeCollectors = array();
+
+        $result = $this->mysqli->query("SELECT `name`, `type`, `id` FROM collector WHERE active = 1 AND (userid = '$userid' OR public = 1 )");
+        while ($row = $result->fetch_object())
+        {
+            $activeCollectors[] = $row;
+        }
+        return $activeCollectors;
     }
 
     private function searchArray($array, $key, $val) {

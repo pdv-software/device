@@ -2,15 +2,21 @@
     global $path;
 
 	$devices = array();
+        $collectors = array();
 	foreach($devices_templates as $key => $value)
 	{
 		$devices[$key] = ((!isset($value->name) || $value->name == "" ) ? $key : $value->name);
+	}
+        foreach($collectorsData as $key => $value)
+	{
+		$collectors[$value->name] = $value->name;
 	}
 ?>
 
 <script type="text/javascript" src="<?php echo $path; ?>Modules/device/Views/device.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Lib/tablejs/table.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Lib/tablejs/custom-table-fields.js"></script>
+<script type="text/javascript" src="<?php echo $path; ?>Lib/misc/properties_visualizer.js"></script>
 
 <style>
 #table input[type="text"] {
@@ -63,7 +69,7 @@
         <h3 id="initdeviceModalLabel"><?php echo _('Initialize device'); ?></h3>
     </div>
     <div class="modal-body">
-        <p><?php echo _('Default inputs and associated feeds will be automaticaly created.'); ?>
+        <p><?php echo _('The selected inputs and associated feeds will be automaticaly created.'); ?>
 		   <br><br>
 		   <?php echo _('Make sure the selected device node and type are correcly configured before proceding.'); ?>
 		   <br>
@@ -71,18 +77,27 @@
 		   <br>
            <?php echo _('If the node name already exists, new default inputs and feeds will be added.'); ?>
 		   <br><br>
-        </p>
+        </p><br>
+            <div id="deviceSettings">
+          
+            </div><br>
+            <div id="deviceInputs">
+              
+            </div>
     </div>
     <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo _('Cancel'); ?></button>
-        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize'); ?></button>
+        <button id="canceldevicesettings" class="btn" data-dismiss="modal" aria-hidden="true"><?php echo _('Cancel'); ?></button>
+        <button id="savedevicesettings" class="btn btn-primary"><?php echo _('Save Settings'); ?></button>
+        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize'); ?></button>   
     </div>
 </div>
 
 <script>
   var path = "<?php echo $path; ?>";
   var devices = <?php echo json_encode($devices); ?>;
-  
+  var collectorsData = <?php echo json_encode($collectorsData); ?>;
+  var collectors = <?php echo json_encode($collectors); ?>; 
+  var devicesTemplates = <?php echo json_encode($devices_templates); ?>;
   // Extend table library field types
   for (z in customtablefields) table.fieldtypes[z] = customtablefields[z];
   table.element = "#table";
@@ -93,9 +108,11 @@
     'name':{'title':'<?php echo _("Name"); ?>','type':"text"},
     'description':{'title':'<?php echo _('Location'); ?>','type':"text"},
     'nodeid':{'title':'<?php echo _("Node"); ?>','type':"text"},
-	'type':{'title':'<?php echo _("Type"); ?>','type':"select",'options':devices},
-	'devicekey':{'title':'<?php echo _('Device access key'); ?>','type':"text"},
-	'time':{'title':'<?php echo _("Updated"); ?>', 'type':"updated"},
+    'type':{'title':'<?php echo _("Type"); ?>','type':"select",'options':devices},
+    'devicekey':{'title':'<?php echo _('Device access key'); ?>','type':"text"},
+    'time':{'title':'<?php echo _("Updated"); ?>', 'type':"updated"},
+    'active':{'title':'<?php echo _("Active"); ?>', 'type':"icon", 'trueicon':"icon-ok", 'falseicon':"icon-remove"},
+    'collector':{'title':'<?php echo _("Collector"); ?>', 'type':"select", 'options':collectors},
     //'public':{'title':"<?php echo _('tbd'); ?>", 'type':"icon", 'trueicon':"icon-globe", 'falseicon':"icon-lock"},
     // Actions
     'edit-action':{'title':'', 'type':"edit", 'tooltip':"<?php echo _('Edit'); ?>"},
@@ -132,6 +149,10 @@
   }
 
   var updater;
+  var deviceTemplate = null;
+  var settingInputs;
+  var rowid;
+  
   function updaterStart(func, interval)
   {
     clearInterval(updater);
@@ -174,8 +195,34 @@
   });
  
   $("#table").on('click', '.icon-file', function() {
-    $('#initdeviceModal').modal('show');
-    $('#initdeviceModal').attr('deviceid',table.data[$(this).attr('row')]['id']);
+    $('#deviceSettings').html('');
+    var type = table.data[$(this).attr('row')]['type'];
+    if(type !== ''){
+      $.each(devicesTemplates, function(name, element){
+        if(type === name){
+          deviceTemplate = element;
+          return false;
+        }
+      });
+      if(deviceTemplate !== null){
+        rowid = $(this).attr('row');
+        var container = $('#deviceSettings');
+	var props = table.data[rowid]['properties'];
+	if(props === ""){
+	  props = {};
+	}else{
+          props = JSON.parse(props);
+	}
+        if(deviceTemplate.properties){
+          var visualizer = new PropertiesVisualizer();
+          settingInputs = visualizer.visualize(deviceTemplate.properties, container, props);
+        }
+        $('#initdeviceModal').modal('show');
+        $('#initdeviceModal').attr('deviceid',table.data[$(this).attr('row')]['id']);
+      }
+    } else{
+      alert('<?php echo _('No type selected'); ?>');
+    }
   });
   
   $("#confirminitdevice").click(function()
@@ -184,6 +231,41 @@
     var result = device.inittemplate(id);
     alert(result['message']);
     $('#initdeviceModal').modal('hide');
+    $('#deviceSettings').html('');
+  });
+  
+  $("#savedevicesettings").click(function()
+  {
+    var id = $('#initdeviceModal').attr('deviceid');
+    var data = {'properties':{}};
+    $.each(settingInputs, function(key, value){
+      var id = value.attr("id");
+      var val = value.val();
+      var dataType = "";
+      $.each(deviceTemplate.properties, function(key, value){
+	if(value.name === id){
+	  dataType = value.dataType;
+          return false;
+	}
+      });
+      if(dataType === "number"){
+        data.properties[id] = parseFloat(val);
+      }else{
+        data.properties[id] = val;
+      }
+    });
+    if(!$.isEmptyObject(data.properties)){
+      device.set(id, data);
+    }
+    $('#initdeviceModal').modal('hide');
+    $('#deviceSettings').html('');
+    var newProps = JSON.stringify(data.properties);
+    table.data[rowid]['properties'] = newProps;
+  });
+  
+  $("#canceldevicesettings").click(function()
+  {
+    $('#deviceSettings').html('');
   });
 
 </script>
