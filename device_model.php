@@ -135,7 +135,7 @@ class Device
         $userid = (int) $userid;
         $devices = array();
 
-        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time` FROM device WHERE userid = '$userid'");
+        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time`, `active`, `collectorid`, (SELECT `name` from collector c where c.id = collectorid) AS collector, `properties` FROM device WHERE userid = $userid");
         while ($row = (array)$result->fetch_object())
         {
             $devices[] = $row;
@@ -146,7 +146,7 @@ class Device
     private function load_to_redis($userid)
     {
         $this->redis->delete("user:device:$userid");
-        $result = $this->mysqli->query("SELECT `id`, `name`, `description`, `type`, `nodeid`, `devicekey` FROM device WHERE userid = '$userid'");
+        $result = $this->mysqli->query("SELECT `id`, `name`, `description`, `type`, `nodeid`, `devicekey`, `active`, `collectorid`, `properties` FROM device WHERE userid = '$userid'");
         while ($row = $result->fetch_object())
         {
             $this->redis->sAdd("user:device:$userid", $row->id);
@@ -156,7 +156,10 @@ class Device
                 'description'=>$row->description,
                 'type'=>$row->type,
                 'nodeid'=>$row->nodeid,
-                'devicekey'=>$row->devicekey
+                'devicekey'=>$row->devicekey,
+                'active'=>$row->active,
+                'collector'=>$row->collector,
+                'properties'=>$row->properties
             ));
         }
     }
@@ -165,7 +168,7 @@ class Device
     {
         $userid = intval($userid);
         $devicekey = md5(uniqid(mt_rand(), true));
-        $this->mysqli->query("INSERT INTO device (`userid`, `name`, `description`, `nodeid`, `devicekey`) VALUES ('$userid','New Device','','New Node','$devicekey')");
+        $this->mysqli->query("INSERT INTO device (`userid`, `name`, `description`, `nodeid`, `devicekey`, `active`, `collectorid`, `properties`) VALUES ('$userid','New Device','','New Node','$devicekey', 1, NULL, '')");
         if ($this->redis) $this->load_to_redis($userid);
         return $this->mysqli->insert_id;
     }
@@ -213,15 +216,33 @@ class Device
             }
             $array[] = "`devicekey` = '".$devicekey."'";
         }
-        if (isset($fields->type)) $array[] = "`type` = '".preg_replace('/[^\/\|\,\w\s-:]/','',$fields->type)."'";
-
+        if (isset($fields->type)){
+            $array[] = "`type` = '".preg_replace('/[^\/\|\,\w\s-:]/','',$fields->type)."'";
+            $array[] = "`properties` = ''";
+        }
+        if (isset($fields->active)){
+            $array[] = "`active` = ".preg_replace('/[^\p{N}]/u','',$fields->active);
+        }
+        if(isset($fields->properties)){
+	    $array[] = "`properties` = '".json_encode($fields->properties)."'";
+	}
+        if(isset($fields->collector)){
+            $collector = $fields->collector;
+            $result = $this->mysqli->query("SELECT `id` from collector WHERE `name` = '$collector'");
+            $row = $result->fetch_array(MYSQLI_NUM);
+            if($row){
+              $collectorid = $row[0];
+              $array[] = "`collectorid` = $collectorid";
+            }
+	    
+	}
         // Convert to a comma seperated string for the mysql query
         $fieldstr = implode(",",$array);
-        $this->mysqli->query("UPDATE device SET ".$fieldstr." WHERE `id` = '$id'");
+        $this->mysqli->query("UPDATE device SET ".$fieldstr." WHERE `id` = $id");
 
         if ($this->mysqli->affected_rows>0){
             if ($this->redis) {
-                $result = $this->mysqli->query("SELECT userid FROM device WHERE id='$id'");
+                $result = $this->mysqli->query("SELECT userid FROM device WHERE id=$id");
                 $row = (array) $result->fetch_object();
                 if (isset($row['userid']) && $row['userid']) {
                     $this->load_to_redis($row['userid']);
@@ -249,7 +270,7 @@ class Device
         return $list;
     }
 
-    public function init_template($id)
+    public function init_template($id, $inputs)
     {
         $id = (int) $id;
         if (!$this->exist($id)) return array('success'=>false, 'message'=>'Device does not exist');
@@ -267,29 +288,40 @@ class Device
 
             $userid = $row['userid'];
             $node = $row['nodeid'];
-            $feeds = $template->feeds;
-            $inputs = $template->inputs;
-
+            $usedInputs;
+            $inputTemplates = $template->inputs;
+            foreach ($inputTemplates as $value) {
+              if( in_array($value->name, $inputs)){
+                $usedInputs[] = $value;
+              }
+            }
+            $feedTemplates = $template->feeds;
+            $usedFeeds;
+            foreach($feedTemplates as $value){
+              if(in_array($value->name, $inputs)){
+                $usedFeeds[] = $value;
+              }
+            }
             // Create feeds
-            $result = $this->create_feeds($userid, $node, $feeds);
+            $result = $this->create_feeds($userid, $node, $usedFeeds);
             if ($result["success"] !== true) {
               return array('success'=>false, 'message'=>'Error while creating the feeds. ' . $result['message']);
             }
 
             // Create inputs
-            $result = $this->create_inputs($userid, $node, $inputs);
+            $result = $this->create_inputs($userid, $node, $usedInputs);
             if ($result !== true) {
               return array('success'=>false, 'message'=>'Error while creating the inputs.');
             }
 
             // Create inputs processes
-            $result = $this->create_inputs_processes($feeds, $inputs);
+            $result = $this->create_inputs_processes($usedFeeds, $usedInputs);
             if ($result["success"] !== true) {
               return array('success'=>false, 'message'=>'Error while creating the inputs process list. ' . $result['message']);
             }
             
             // Create feeds processes
-            $result = $this->create_feeds_processes($feeds, $inputs);
+            $result = $this->create_feeds_processes($usedFeeds, $usedInputs);
             if ($result["success"] !== true) {
               return array('success'=>false, 'message'=>'Error while creating the feeds process list. ' . $result['message']);
             }
@@ -343,10 +375,10 @@ class Device
     private function create_inputs($userid, $node, &$inputArray) {
         require_once "Modules/input/input_model.php";
         $input = new Input($this->mysqli,$this->redis, null);
-
         foreach($inputArray as $i) {
           // Create each input
           $name = $i->name;
+          $this->log->info("create_input name=$name ");
           $description = $i->description;
           if (property_exists($i, "unit")) { // Unit
             $unit = $i->unit;
@@ -381,7 +413,7 @@ class Device
             // for each input
             if (isset($i->processList)) {
                 $inputId = $i->inputId;
-                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $i->processList);
+                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $i->processList, $i);
                 if (isset($result["success"])) {
                     return $result; // success is only filled if it was an error
                 }
@@ -407,7 +439,7 @@ class Device
             // for each feed
             if (($f->engine == Engine::VIRTUALFEED) && isset($f->processList)) {
                 $feedId = $f->feedId;
-                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $f->processList);
+                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $f->processList, $f);
                 if (isset($result["success"])) {
                     return $result; // success is only filled if it was an error
                 }
@@ -424,7 +456,7 @@ class Device
     }
     
     // Converts template processList
-    private function convertTemplateProcessList($feedArray, $inputArray, $processArray){
+    private function convertTemplateProcessList($feedArray, $inputArray, $processArray, $currentItem){
         $resultProcesslist = array();
         if (is_array($processArray)) {
             require_once "Modules/process/process_model.php";
@@ -452,7 +484,9 @@ class Device
 
                         if (isset($p->arguments->value)) {
                             $value = $p->arguments->value;
-                        } else {
+                        } else if(isset($currentItem->name)){
+                            $value = $currentItem->name;
+                        } else{
                             $this->log->error("convertProcess() Bad device template. Undefined argument value. process='$proc_name' type='".$p->arguments->type."'");
                             return array('success'=>false, 'message'=>"Bad device template. Undefined argument value. process='$proc_name' type='".$p->arguments->type."'");
                         }
@@ -498,6 +532,18 @@ class Device
             }
         }
         return $resultProcesslist;
+    }
+    
+    public function get_active_collectors($userid){
+        $useriId = (int) $userid;
+        $activeCollectors = array();
+
+        $result = $this->mysqli->query("SELECT `name`, `type`, `id` FROM collector WHERE active = 1 AND (userid = '$userid' OR public = 1 )");
+        while ($row = $result->fetch_object())
+        {
+            $activeCollectors[] = $row;
+        }
+        return $activeCollectors;
     }
 
     private function searchArray($array, $key, $val) {

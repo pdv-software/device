@@ -8,5 +8,8 @@ $schema['device'] = array(
     'type' => array('type' => 'varchar(32)'),
     'nodeid' => array('type' => 'text'),
     'devicekey' => array('type' => 'varchar(64)'),
-    'time' => array('type' => 'int(10)')
+    'time' => array('type' => 'int(10)'),
+    'active' => array('type' => 'tinyint(1)', 'default' => '0'),
+    'collectorid' => array('type' => 'int(11)'),
+    'properties' => array('type' => 'text', 'default' => '')
 );
