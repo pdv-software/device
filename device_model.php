@@ -290,7 +290,7 @@ class Device
             $node = $row['nodeid'];
             $usedInputs;
             $inputTemplates = $template->inputs;
-            foreach (inputTemplates as $value) {
+            foreach ($inputTemplates as $value) {
               if( in_array($value->name, $inputs)){
                 $usedInputs[] = $value;
               }
@@ -375,10 +375,10 @@ class Device
     private function create_inputs($userid, $node, &$inputArray) {
         require_once "Modules/input/input_model.php";
         $input = new Input($this->mysqli,$this->redis, null);
-
         foreach($inputArray as $i) {
           // Create each input
           $name = $i->name;
+          $this->log->info("create_input name=$name ");
           $description = $i->description;
           if (property_exists($i, "unit")) { // Unit
             $unit = $i->unit;

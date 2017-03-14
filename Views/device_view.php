@@ -85,7 +85,7 @@
                 <select id="inputSelection" multiple="multiple"></select>  
             </div><br>
             <div id="deviceSettings">
-                <label style="font-style: bold;"><?php echo _('Settings');?></label>
+                <label><b><?php echo _('Settings');?></b></label>
                 <div id="deviceSettingsContent"></div>
             </div>
     </div>
@@ -140,7 +140,7 @@
       }
 */
       table.draw();
-      if (table.data.length != 0) {
+      if (table.data.length !== 0) {
         $("#nodevices").hide();
         $("#localheading").show();
         $("#apihelphead").show();
@@ -156,6 +156,20 @@
   var deviceTemplate = null;
   var settingInputs;
   var rowid;
+  var multiOptions = {};
+  multiOptions.nonSelectedText = '<?php echo _('No input selected');?>';
+  multiOptions.selectAllValue = 'select-all-value';
+  multiOptions.selectAllText = '<?php echo _('Select all');?>';
+  multiOptions.includeSelectAllOption = true;
+  multiOptions.enableFiltering = true;
+  multiOptions.enableCaseInsensitiveFiltering = true;
+  multiOptions.enableFullValueFiltering = true;
+  multiOptions.filterPlaceholder = '<?php echo _('Search for inputs');?>';
+  var select;
+  
+  $(document).ready(function(){
+    select = $('#inputSelection');
+  });
   
   function updaterStart(func, interval)
   {
@@ -200,8 +214,8 @@
  
   $("#table").on('click', '.icon-file', function() {
     $('#deviceSettingsContent').html('');
-    $('#inputSelection options').remove();
-    var select = $('#inputSelection');
+    $('#inputSelection option').remove();
+    select.multiselect('destroy');
     var type = table.data[$(this).attr('row')]['type'];
     if(type !== ''){
       $.each(devicesTemplates, function(name, element){
@@ -225,11 +239,21 @@
         }
         if(deviceTemplate.inputs){
           $.each(deviceTemplate.inputs, function(index, element){
-            var opt = $("<option></option>");
-            opt.val(element.name).text(element.name);
-            select.append(opt);
+            if(typeof element.active === "string"){
+              if(element.active === "1"){
+                var opt = $("<option></option>");
+                opt.val(element.name).text(element.name);
+                select.append(opt);
+              }
+            } else{
+              var opt = $("<option></option>");
+              opt.val(element.name).text(element.name);
+              select.append(opt);
+            }
+            
           });
-          select.multiselect({nonSelectedText: '<?php echo _('No input selected');?>', selectAllValue:'select-all-value', selectAllText:'<?php echo _('Select all');?>', includeSelectAllOption: true});
+          
+          select.multiselect(multiOptions);
         }
         $('#initdeviceModal').modal('show');
         $('#initdeviceModal').attr('deviceid',table.data[$(this).attr('row')]['id']);
@@ -244,7 +268,7 @@
     var id = $('#initdeviceModal').attr('deviceid');
     var inputsArray = [];
     $('#inputSelection option:selected').each(function(index, item){
-      if(item.value !== "select-all-value"){
+      if(item.value !== multiOptions.selectAllValue){
         inputsArray.push(item.value);
       }
     });
@@ -276,6 +300,7 @@
     });
     if(!$.isEmptyObject(data.properties)){
       device.set(id, data);
+      //alert(result["message"]);
     }
     $('#initdeviceModal').modal('hide');
     var newProps = JSON.stringify(data.properties);
