@@ -413,7 +413,7 @@ class Device
             // for each input
             if (isset($i->processList)) {
                 $inputId = $i->inputId;
-                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $i->processList);
+                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $i->processList, $i);
                 if (isset($result["success"])) {
                     return $result; // success is only filled if it was an error
                 }
@@ -439,7 +439,7 @@ class Device
             // for each feed
             if (($f->engine == Engine::VIRTUALFEED) && isset($f->processList)) {
                 $feedId = $f->feedId;
-                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $f->processList);
+                $result = $this->convertTemplateProcessList($feedArray, $inputArray, $f->processList, $f);
                 if (isset($result["success"])) {
                     return $result; // success is only filled if it was an error
                 }
@@ -456,7 +456,7 @@ class Device
     }
     
     // Converts template processList
-    private function convertTemplateProcessList($feedArray, $inputArray, $processArray){
+    private function convertTemplateProcessList($feedArray, $inputArray, $processArray, $currentItem){
         $resultProcesslist = array();
         if (is_array($processArray)) {
             require_once "Modules/process/process_model.php";
@@ -484,7 +484,9 @@ class Device
 
                         if (isset($p->arguments->value)) {
                             $value = $p->arguments->value;
-                        } else {
+                        } else if(isset($currentItem->name)){
+                            $value = $currentItem->name;
+                        } else{
                             $this->log->error("convertProcess() Bad device template. Undefined argument value. process='$proc_name' type='".$p->arguments->type."'");
                             return array('success'=>false, 'message'=>"Bad device template. Undefined argument value. process='$proc_name' type='".$p->arguments->type."'");
                         }
