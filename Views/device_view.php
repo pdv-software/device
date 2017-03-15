@@ -92,7 +92,7 @@
     <div class="modal-footer">
         <button id="canceldevicesettings" class="btn" data-dismiss="modal" aria-hidden="true"><?php echo _('Cancel'); ?></button>
         <button id="savedevicesettings" class="btn btn-primary"><?php echo _('Save Settings'); ?></button>
-        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize (create inputs and feeds'); ?></button>   
+        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize (create inputs and feeds)'); ?></button>   
     </div>
 </div>
 
@@ -239,18 +239,22 @@
         }
         if(deviceTemplate.inputs){
           $.each(deviceTemplate.inputs, function(index, element){
+            var display = false;
             if(typeof element.active === "string"){
-              if(element.active === "1"){
-                var opt = $("<option></option>");
-                opt.val(element.name).text(element.name);
-                select.append(opt);
-              }
+              display = element.active === "1";
             } else{
+              display = true;
+            }
+            if(display){
               var opt = $("<option></option>");
-              opt.val(element.name).text(element.name);
+              opt.val(element.name);
+              if(element.unit && element.unit !== ""){
+                opt.text(element.name + " (" + element.unit + ")");
+              } else{
+                opt.text(element.name);
+              }
               select.append(opt);
             }
-            
           });
           
           select.multiselect(multiOptions);
@@ -265,17 +269,23 @@
   
   $("#confirminitdevice").click(function()
   {
-    var id = $('#initdeviceModal').attr('deviceid');
-    var inputsArray = [];
-    $('#inputSelection option:selected').each(function(index, item){
-      if(item.value !== multiOptions.selectAllValue){
-        inputsArray.push(item.value);
-      }
-    });
-    var inputs = inputsArray.join();
-    var result = device.inittemplate(id, inputs);
-    alert(result['message']);
-    $('#initdeviceModal').modal('hide');
+    var selectedOtions = $('#inputSelection option:selected');
+    var selectedCount = selectedOtions.length;
+    if(selectedCount > 0){
+      var id = $('#initdeviceModal').attr('deviceid');
+      var inputsArray = [];
+      selectedOtions.each(function(index, item){
+        if(item.value !== multiOptions.selectAllValue){
+          inputsArray.push(item.value);
+        }
+      });
+      var inputs = inputsArray.join();
+      var result = device.inittemplate(id, inputs);
+      alert(result['message']);
+      $('#initdeviceModal').modal('hide');
+    } else{
+      alert('<?php echo _('No inputs selected'); ?>');
+    }
   });
   
   $("#savedevicesettings").click(function()
