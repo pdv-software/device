@@ -163,7 +163,7 @@
   multiOptions.includeSelectAllOption = true;
   multiOptions.enableFiltering = true;
   multiOptions.enableCaseInsensitiveFiltering = true;
-  multiOptions.enableFullValueFiltering = true;
+  multiOptions.filterBehavior = "value";
   multiOptions.filterPlaceholder = '<?php echo _('Search for inputs');?>';
   var select;
   
