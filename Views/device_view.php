@@ -11,6 +11,7 @@
 	{
 		$collectors[$value->name] = $value->name;
 	}
+        $collectors[_("No collector")] = _("No collector");
 ?>
 
 <script type="text/javascript" src="<?php echo $path; ?>Modules/device/Views/device.js"></script>
