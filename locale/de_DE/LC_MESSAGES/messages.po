@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: emoncms3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-12 22:35+0100\n"
-"PO-Revision-Date: 2017-02-13 15:53+0100\n"
+"POT-Creation-Date: 2017-03-18 23:23+0100\n"
+"PO-Revision-Date: 2017-03-18 23:23+0100\n"
 "Last-Translator: Frank Dille\n"
 "Language-Team: @sumpfing <anne@sumpfing.de>\n"
 "Language: de_DE\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
@@ -127,7 +127,7 @@ msgstr "Gerät Details "
 msgid "Add a device"
 msgstr "Gerät Hinzufügen"
 
-#: ../../../Views/device_api.php:40 ../../../Views/device_view.php:42
+#: ../../../Views/device_api.php:40 ../../../Views/device_view.php:50
 msgid "Delete device"
 msgstr "Gerät Löschen"
 
@@ -139,8 +139,8 @@ msgstr "Gerät Aktualisieren"
 msgid "List templates"
 msgstr "Vorlagenliste"
 
-#: ../../../Views/device_api.php:43 ../../../Views/device_view.php:63
-#: ../../../Views/device_view.php:104
+#: ../../../Views/device_api.php:43 ../../../Views/device_view.php:71
+#: ../../../Views/device_view.php:124
 msgid "Initialize device"
 msgstr "Geräte Initialisierung"
 
@@ -167,39 +167,39 @@ msgid ""
 "A device should only need to be initialized once on instalation. Initiating "
 "a device twice will duplicate its default inputs and feeds."
 msgstr ""
-"Ein Gerätetyp bei der Installation muss nur einmal initialisiert werden. "
-"Jede weitere Initalisierung erstellt weitere Inputs und Feeds als Kopie."
+"Ein Gerät muss bei der Installation einmalig initialisiert werden. Jede "
+"weitere Initialisierung erstellt weitere Inputs und Feeds als Kopie."
 
-#: ../../../Views/device_view.php:22
+#: ../../../Views/device_view.php:30
 msgid "Devices Help"
 msgstr "Geräte Hilfe"
 
-#: ../../../Views/device_view.php:23
+#: ../../../Views/device_view.php:31
 msgid "Devices"
 msgstr "Geräte"
 
-#: ../../../Views/device_view.php:25
+#: ../../../Views/device_view.php:33
 msgid "loading..."
 msgstr "wird geladen ..."
 
-#: ../../../Views/device_view.php:29
+#: ../../../Views/device_view.php:37
 msgid "No devices"
 msgstr "Keine Geräte"
 
-#: ../../../Views/device_view.php:30
+#: ../../../Views/device_view.php:38
 msgid "There are no devices configured. Please add a new device."
 msgstr ""
 "Es sind keine Geräte konfiguriert, Bitte erstellen Sie ein neues Gerät."
 
-#: ../../../Views/device_view.php:35
+#: ../../../Views/device_view.php:43
 msgid "New device"
 msgstr "Neues Gerät"
 
-#: ../../../Views/device_view.php:45
+#: ../../../Views/device_view.php:53
 msgid "Deleting a device is permanent."
 msgstr "Das Löschen eines Gerätes ist endgültig!"
 
-#: ../../../Views/device_view.php:47
+#: ../../../Views/device_view.php:55
 msgid ""
 "If this device is active and is using a device key, it will no longer be "
 "able to post data."
@@ -207,7 +207,7 @@ msgstr ""
 "Warnung: Sollte das Gerät aktiv sein und per <b>Device-Key</b> Daten senden, "
 "wird dies nicht mehr funktionieren."
 
-#: ../../../Views/device_view.php:49
+#: ../../../Views/device_view.php:57
 msgid ""
 "Inputs and Feeds that this device uses are not deleted and all historic data "
 "is kept. To remove them, deleted manualy afterwards."
@@ -216,23 +216,24 @@ msgstr ""
 "aufgezeichneten Daten bleiben erhalten. Zum Löschen der Daten müssen die "
 "Feeds anschließend manuell gelöscht werden."
 
-#: ../../../Views/device_view.php:51
+#: ../../../Views/device_view.php:59
 msgid "Are you sure you want to delete?"
 msgstr "Wirklich löschen?"
 
-#: ../../../Views/device_view.php:55 ../../../Views/device_view.php:77
+#: ../../../Views/device_view.php:63 ../../../Views/device_view.php:92
 msgid "Cancel"
 msgstr "Abbruch"
 
-#: ../../../Views/device_view.php:56
+#: ../../../Views/device_view.php:64
 msgid "Delete permanently"
 msgstr "Dauerhaft löschen"
 
-#: ../../../Views/device_view.php:66
-msgid "Default inputs and associated feeds will be automaticaly created."
-msgstr "Es werden jetzt die Default Inputs und Feeds automatisch erstellt."
+#: ../../../Views/device_view.php:74
+msgid "The selected inputs and associated feeds will be automaticaly created."
+msgstr ""
+"Die ausgewählten Inputs und zugehörigen Feeds werden automatisch erstellt."
 
-#: ../../../Views/device_view.php:68
+#: ../../../Views/device_view.php:76
 msgid ""
 "Make sure the selected device node and type are correcly configured before "
 "proceding."
@@ -240,63 +241,123 @@ msgstr ""
 "Stellen Sie sicher das Gerätetyp und -Node richtig konfiguriert sind, bevor "
 "Sie fortfahren."
 
-#: ../../../Views/device_view.php:70
+#: ../../../Views/device_view.php:78
 msgid "Initializing a device usualy should only be done once on installation."
 msgstr ""
 "Die Initalisierung eines Gerätes sollte nur einmalig bei der Installation "
 "erfolgen."
 
-#: ../../../Views/device_view.php:72
+#: ../../../Views/device_view.php:80
 msgid ""
 "If the node name already exists, new default inputs and feeds will be added."
 msgstr ""
 "Wenn der Node bereits existiert werden die Inputs und Feed hinzugefügt."
 
-#: ../../../Views/device_view.php:78
+#: ../../../Views/device_view.php:83
+msgid "Inputs (Units)"
+msgstr "Inputs (Einheiten)"
+
+#: ../../../Views/device_view.php:87
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ../../../Views/device_view.php:92
+msgid "Close Settings"
+msgstr "Einstellungen schließen"
+
+#: ../../../Views/device_view.php:93
+msgid "Save Settings"
+msgstr "Einstellungen speichern"
+
+#: ../../../Views/device_view.php:93
+msgid "Save"
+msgstr "Speichern"
+
+#: ../../../Views/device_view.php:94
+msgid "Create selected inputs and feeds"
+msgstr "Erstellt ausgewählte Inputs und Feeds"
+
+#: ../../../Views/device_view.php:94
 msgid "Initialize"
 msgstr "Initialisieren"
 
-#: ../../../Views/device_view.php:93
+#: ../../../Views/device_view.php:111
 msgid "Name"
 msgstr "Name"
 
-#: ../../../Views/device_view.php:94
+#: ../../../Views/device_view.php:112
 msgid "Location"
 msgstr "Standort"
 
-#: ../../../Views/device_view.php:95
+#: ../../../Views/device_view.php:113
 msgid "Node"
 msgstr "Node"
 
-#: ../../../Views/device_view.php:96
+#: ../../../Views/device_view.php:114
 msgid "Type"
 msgstr "Typ"
 
-#: ../../../Views/device_view.php:97
+#: ../../../Views/device_view.php:115
 msgid "Device access key"
 msgstr "Device-Key"
 
-#: ../../../Views/device_view.php:98
+#: ../../../Views/device_view.php:116
 msgid "Updated"
 msgstr "Geändert"
 
-#: ../../../Views/device_view.php:99
+#: ../../../Views/device_view.php:117
+msgid "Active"
+msgstr "Aktiv"
+
+#: ../../../Views/device_view.php:118
+msgid "Collector"
+msgstr "Collector"
+
+#: ../../../Views/device_view.php:119
 msgid "tbd"
 msgstr ""
 
-#: ../../../Views/device_view.php:101
+#: ../../../Views/device_view.php:121
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../../../Views/device_view.php:102
+#: ../../../Views/device_view.php:122
 msgid "Delete"
 msgstr "Löschen"
+
+#: ../../../Views/device_view.php:159
+msgid "No input selected"
+msgstr "Kein Input ausgewählt"
+
+#: ../../../Views/device_view.php:160
+msgid "All selected"
+msgstr "Alles ausgewählt"
+
+#: ../../../Views/device_view.php:162
+msgid "Select all"
+msgstr "Alle auswählen"
+
+#: ../../../Views/device_view.php:163
+msgid "Selected"
+msgstr "Ausgewählt"
+
+#: ../../../Views/device_view.php:168
+msgid "Search for inputs"
+msgstr "Inputs Suchen"
+
+#: ../../../Views/device_view.php:268
+msgid "No type selected"
+msgstr "Kein Typ ausgewählt"
+
+#: ../../../Views/device_view.php:289
+msgid "No inputs selected"
+msgstr "Keine Inputs ausgewählt"
 
 #: ../../../device_menu.php:7
 msgid "Device Setup"
 msgstr "Geräte"
 
-#: ../../../device_model.php:297
+#: ../../../device_model.php:329
 msgid "Device initialized"
 msgstr "Gerät erfolgreich Initialisiert."
 
@@ -348,9 +409,6 @@ msgstr "Gerät erfolgreich Initialisiert."
 #~ msgid "Close"
 #~ msgstr "Schliessen"
 
-#~ msgid "Save changes"
-#~ msgstr "Änderungen speichern"
-
 #~ msgid "Configure element"
 #~ msgstr "Element konfigurieren"
 
@@ -365,9 +423,6 @@ msgstr "Gerät erfolgreich Initialisiert."
 
 #~ msgid "Not modified"
 #~ msgstr "Nicht modifiziert"
-
-#~ msgid "Saved"
-#~ msgstr "Gespeichert"
 
 #~ msgid "Dashboards"
 #~ msgstr "Dashboards"
@@ -625,9 +680,6 @@ msgstr "Gerät erfolgreich Initialisiert."
 
 #~ msgid "Thumb view"
 #~ msgstr "Thumb anzeigen"
-
-#~ msgid "Actions"
-#~ msgstr "Aktionen"
 
 #~ msgid "Share"
 #~ msgstr "Geteilt"

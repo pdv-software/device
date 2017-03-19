@@ -71,17 +71,16 @@
         <h3 id="initdeviceModalLabel"><?php echo _('Initialize device'); ?></h3>
     </div>
     <div class="modal-body">
-        <p><?php echo _('The selected inputs and associated feeds will be automaticaly created.'); ?>
-		   <br><br>
-		   <?php echo _('Make sure the selected device node and type are correcly configured before proceding.'); ?>
-		   <br>
-		   <?php echo _('Initializing a device usualy should only be done once on installation.'); ?>
-		   <br>
-           <?php echo _('If the node name already exists, new default inputs and feeds will be added.'); ?>
-		   <br><br>
-        </p><br>
+        <?php echo _('The selected inputs and associated feeds will be automaticaly created.'); ?>
+        <br>
+        <?php echo _('Make sure the selected device node and type are correcly configured before proceding.'); ?>
+        <br>
+        <?php echo _('Initializing a device usualy should only be done once on installation.'); ?>
+        <br>
+        <?php echo _('If the node name already exists, new default inputs and feeds will be added.'); ?>
+        </p>
             <div id="deviceInputs">
-                <label for="inputSelection"><?php echo _('Inputs'); ?></label>
+                <label for="inputSelection"><b><?php echo _('Inputs (Units)'); ?></b></label>
                 <select id="inputSelection" multiple="multiple"></select>  
             </div><br>
             <div id="deviceSettings">
@@ -90,9 +89,9 @@
             </div>
     </div>
     <div class="modal-footer">
-        <button id="canceldevicesettings" class="btn" data-dismiss="modal" aria-hidden="true"><?php echo _('Cancel'); ?></button>
-        <button id="savedevicesettings" class="btn btn-primary"><?php echo _('Save Settings'); ?></button>
-        <button id="confirminitdevice" class="btn btn-primary"><?php echo _('Initialize (create inputs and feeds)'); ?></button>   
+        <button id="canceldevicesettings" class="btn" data-dismiss="modal" aria-hidden="true" title="<?php echo _('Close Settings'); ?>"><?php echo _('Cancel'); ?></button>
+        <button id="savedevicesettings" class="btn btn-primary" title="<?php echo _('Save Settings'); ?>"><?php echo _('Save'); ?></button>
+        <button id="confirminitdevice" class="btn btn-primary" title="<?php echo _('Create selected inputs and feeds'); ?>"><?php echo _('Initialize'); ?></button>
     </div>
 </div>
 
@@ -158,8 +157,10 @@
   var rowid;
   var multiOptions = {};
   multiOptions.nonSelectedText = '<?php echo _('No input selected');?>';
+  multiOptions.allSelectedText = '<?php echo _('All selected');?>';
   multiOptions.selectAllValue = 'select-all-value';
   multiOptions.selectAllText = '<?php echo _('Select all');?>';
+  multiOptions.nSelectedText = '<?php echo _('Selected');?>';
   multiOptions.includeSelectAllOption = true;
   multiOptions.enableFiltering = true;
   multiOptions.enableCaseInsensitiveFiltering = true;
@@ -227,12 +228,12 @@
       if(deviceTemplate !== null){
         rowid = $(this).attr('row');
         var container = $('#deviceSettingsContent');
-	var props = table.data[rowid]['properties'];
-	if(props === ""){
-	  props = {};
-	}else{
+        var props = table.data[rowid]['properties'];
+        if(props === ""){
+          props = {};
+        }else{
           props = JSON.parse(props);
-	}
+        }
         if(deviceTemplate.properties){
           var visualizer = new PropertiesVisualizer();
           settingInputs = visualizer.visualize(deviceTemplate.properties, container, props);
@@ -259,6 +260,7 @@
           
           select.multiselect(multiOptions);
         }
+
         $('#initdeviceModal').modal('show');
         $('#initdeviceModal').attr('deviceid',table.data[$(this).attr('row')]['id']);
       }
@@ -287,7 +289,7 @@
       alert('<?php echo _('No inputs selected'); ?>');
     }
   });
-  
+
   $("#savedevicesettings").click(function()
   {
     var id = $('#initdeviceModal').attr('deviceid');
@@ -297,10 +299,10 @@
       var val = value.val();
       var dataType = "";
       $.each(deviceTemplate.properties, function(key, value){
-	if(value.name === id){
-	  dataType = value.dataType;
+        if(value.name === id){
+          dataType = value.dataType;
           return false;
-	}
+        }
       });
       if(dataType === "number"){
         data.properties[id] = parseFloat(val);
@@ -316,7 +318,5 @@
     var newProps = JSON.stringify(data.properties);
     table.data[rowid]['properties'] = newProps;
   });
-  
-
 
 </script>
