@@ -134,8 +134,9 @@ class Device
     {
         $userid = (int) $userid;
         $devices = array();
-
-        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time`, `active`, `collectorid`, (SELECT `name` from collector c where c.id = collectorid) AS collector, `properties` FROM device WHERE userid = $userid");
+        $noCollectorString = _('No collector');
+        
+        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time`, `active`, `collectorid`, (CASE `collectorid` WHEN -1 THEN '$noCollectorString' ELSE (SELECT `name` from collector c where c.id = collectorid) END) AS collector, `properties` FROM device WHERE userid = $userid");
         while ($row = (array)$result->fetch_object())
         {
             $devices[] = $row;
@@ -146,7 +147,8 @@ class Device
     private function load_to_redis($userid)
     {
         $this->redis->delete("user:device:$userid");
-        $result = $this->mysqli->query("SELECT `id`, `name`, `description`, `type`, `nodeid`, `devicekey`, `active`, `collectorid`, `properties` FROM device WHERE userid = '$userid'");
+        $noCollectorString = _('No collector');
+        $result = $this->mysqli->query("SELECT `id`, `userid`, `name`, `description`, `type`, `nodeid`, `devicekey`, `time`, `active`, `collectorid`, (CASE `collectorid` WHEN -1 THEN '$noCollectorString' ELSE (SELECT `name` from collector c where c.id = collectorid) END) AS collector, `properties` FROM device WHERE userid = $userid");
         while ($row = $result->fetch_object())
         {
             $this->redis->sAdd("user:device:$userid", $row->id);
@@ -227,14 +229,18 @@ class Device
 	    $array[] = "`properties` = '".json_encode($fields->properties)."'";
 	}
         if(isset($fields->collector)){
+            $noCollectorString = _('No collector');
             $collector = $fields->collector;
-            $result = $this->mysqli->query("SELECT `id` from collector WHERE `name` = '$collector'");
-            $row = $result->fetch_array(MYSQLI_NUM);
-            if($row){
-              $collectorid = $row[0];
-              $array[] = "`collectorid` = $collectorid";
+            if($collector === $noCollectorString){
+              $array[] = "`collectorid` = -1";  
+            }else{
+              $result = $this->mysqli->query("SELECT `id` from collector WHERE `name` = '$collector'");
+              $row = $result->fetch_array(MYSQLI_NUM);
+              if($row){
+                $collectorid = $row[0];
+                $array[] = "`collectorid` = $collectorid";
+              }
             }
-	    
 	}
         // Convert to a comma seperated string for the mysql query
         $fieldstr = implode(",",$array);
